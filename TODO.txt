@@ -1,0 +1,17 @@
+OA GAME ROTATOR TODO
+====================
+
+TODO
+----
+
+- meme avec commande normale gtv: affiche serv mais heartbeater apres demande toujours le pass quand on s'attache au screen. Rights pas bons? A cause de l'echo non autorisé? No asking the password in visudo?
+- tester passer de defaultconfig a slotsfile (temps d'attente?)
+- BUG: baseoa a as only one launch, with twice bug! Remove one repeat if previous global var mod was different or try to fix the problem by another mean?
+- if default gamemod not provided, stay as is (not restart gtv) when string becomes '' and default config is called
+- essayer de remplacer score par follow next, et follow next par score (better? do not switch too often?)
+- b3 voir reco auto si ca marche (et enlever pas mal de plugins comme par exemple pas de cronjob ni quote)
+- IMPORTANT: global vars add leading underscore: _single_leading_underscore: weak "internal use" indicator. E.g. from M import * does not import objects whose name starts with an underscore.
+- Bug: does not show oamps options at commandline
+possible fix: make a custom ArgParse help/description class that will call oampsparser and argparser helps? But is this really useful, when we can get the full list with description of options in oamps.sh, this would clutter the help of oa-game-rotator with meaningless infos...
+? allow for no g_password (open to public (no g_password)? Show in calendar?)? none in textfield (rajouter dans php script)
+

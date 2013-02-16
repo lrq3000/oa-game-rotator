@@ -1,0 +1,95 @@
+OA GAME ROTATOR CHANGELOG
+=========================
+
+From v0.0.1 to v0.8.2.3:
+------------------------
+x default config when no booking (be careful that if your server supports multiple mods, that your config contains parameters for every types of mods! but not gametypes, only one gametype, people can callvote to load another gametype).
+and folder where to find the slots file (or to download them)
+x enable warning before end of booking.
+
+x Hard : eteint le serveur et restart avec la config originale
+x Soft : recharge la config et change map
+
+x add default gamemode -g game rotator
+x add vm in booker and rotator...
+x also add homepath, basepath and vm in booker en optionnel (permettra de gérer le basepath special (/baseoa081) pour excessiveplus)
+x gtv heartbeater fonctionne pas (et la premiere connexion gtv au serv se fait a partir du fichier config? serait pas mieux de le faire nous-meme, quand !slot.has_key('gtv') mais que oampsargs('gtv') != None?)
+x bug: fichier heartbeater s'appelle --homepath. cause du bug? envoie pas au bon serv?
+
+x rajouter dans epilogue ou description que quasi tous les parametres (format long) de oamps sont dispo soit ligne de commande
+soit dans les slotsfiles.
+
+x special management of "tv" or "gtv" params (change them to -e and others)
+x --exec special management
+
+x we don't want gtv to reconnect every slot
+
+x heartbeat ne passe pas dans gtvparams
+x GTV no need to restart twice? Only Aftershock server? test et rajouter repeat2 dans aftershock gamemod
+x NOBUG --gtvport bug in oamps.sh
+x gtvmaster address not in heartbeater
+x gtvexec doesn't work?
+x when changing slot, -g is not detected (only first character?): /bin/bash oamps.sh -c oac-edit-me -g b --verbose --basepath "/home/openarenacom/openarena/openarena-0.8.1/" --execdelay "2" --homepath "/home/openarenacom/openarena/openarena-0.8.1/virtual/" --port "27980" --screenname "oac-clantrain-server"
+x gtvexec retest at slot and password change
+x test from booked slot to public (restart_soft, no password and stay with same gamemod)
+x test refpassword (doesn't work for aftershock?) - works for excessiveplus
+x add in headers of oampscommandbuilder function: gtv default delay and changepass default delay and list of refpassword (to easily support other mods just add the command here to set the ref password) and add CPMA ref command
+x SOLUTION: gtv homepath to get mods files. gtv basepath to virtual with symlinks because needs mods files to connect - move gtv in virtual, or add gtvbasepath? pourrait ajouter seulement dans gamerotator, mais pas tres propre...
+x tester au changement de jour (entre 23:30 et 00:00)
+x doesn't change? test with more slots (every 5 minutes) - CHANGE, but map_restart at every slot! and for default config, send g_password "" and ref_password ""
+x gtv autoswitch player view? test with bots only - see config, doesn't autoswitch (only when player quits)
+gtv voir dans bin si seulement follow ou follownext (et si possible switcher regulierement quand oa vanilla, ou envoyer 2: command de excessiveplus et follownext pour que ca marche tout le temps)
+start_mvd_cameras;follow next?
+just try or only use start_mvd_cameras and see later
+x document in help for default-gamemod that if empty default is to keep the last gamemod used in a booking
+x --outputlogrotator to log the game rotator
+x margin delay as parameter
+x --countdown only if -r -k or -k2
+x --verbose also for gtvparams
+x default config: g_password not reset (and what else too?)
+x GTV will retry non-stop: disconnect it? Or not, it stops?
+x add in epilog: designed to manage one game server and one gtv server per instance of the script.
+x --countdown still buggy: if 30, between -30s and time it will keep repeating over the same slot until the exact time is reached
+x package with argparse and readme and todo
+x apres nogtv server, voir si gtv est reconnecté avec un soft_restart
+x gtv disconnect when gtv=no
+x aftershock relaunched at every slot (problem with repeat?) - and as countdown repeated in both commands (should be only in first) -> do a specific thing for --countdown and repeat
+x port gtv params from commandline to slots file also (except gtv, so this should be after gtv param) so that e+ get a special binary
+x try gtv with relative paths
+
+3pbs a corriger surtout:
+x 1- countdown en repeat: seulement pour le premier?
+x 2- gtv-automultiviewpublic restart
+x 3- soft_restart gtv ne se reconnect pas après un nogtv slot
+AS: first launch not repeat. Try with no config --junk and change sv_hostname: works? no more bug, even with normal config?
+XP: gtv multiview only when: full mod loaded + start_mvd_cameras + either ref or xp_maxmvd 1 or more (to enable public mvd)
+x restart_soft --restart? de oa081 (avec basepath different) a restart_soft bug? et des autres sans modif basepath?
+ok because it crashed, command is OK!
+
+x Get arguments: server_name, optional file for download password (defaut dans un fichier oa-game-rotator-password.txt)
+x Download slots file (today)
+x read slots files
+
+x se mettre en temps UTC
+x transpose time_to_slots and parsearguments functions
+x sleep delay autodetect
+x construct oamps parameters from parsed arguments
+x add oamps.sh necessary params (screenname, port, binpath, homepath, gamepath, logrotator, countdown yes true et c'est tout, etc...)
+x add path to oamps.sh
+possible fix: make a custom ArgParse help/description class that will call oampsparser and argparser helps? But is this really useful, when we can get the full list with description of options in oamps.sh, this would clutter the help of oa-game-rotator with meaningless infos...
+x support pour gtv: reconnection en cas de changement de password, suppression s'il n'y a rien
+x Countdown only if next slot is reserved, NO: better to countdown anyway because the server will become public
+
+x loop when change date (slot < lastslots)
+
+x if g_password can't be passed commandline, then use a dummy config that execs the other config
+
+x NO: because we must be able to restart the server if an error occurred. -n 0 if restart_soft
+
+x g_password instead of sv_password
+
+x claintrain.txt (with no dates) for default when there's no booking at all for the day (everything empty or default config)
+a tester
+detect pas encore quand tout empty, can't fallback
+
+x Gerer les None (pas de slotsfile, pas de slots parameters, etc...)
