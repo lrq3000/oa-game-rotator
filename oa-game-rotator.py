@@ -22,8 +22,8 @@
 #      by Stephen Larroque alias GrosBedo
 #               License: Affero GPL v3+ (AGPLv3 or Above)
 #              Creation date: 2011-12-29
-#          Last modification: 2012-04-01
-#                     version: 0.8.2.3
+#          Last modification: 2013-04-13
+#                     version: 0.8.3
 #=================================
 
 # Import necessary libraries

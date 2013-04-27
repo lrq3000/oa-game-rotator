@@ -1,4 +1,4 @@
-OA GAME ROTATOR v0.8.2.3
+OA GAME ROTATOR v0.8.3
 ========================
 by Stephen Larroque
 
@@ -94,11 +94,12 @@ For example, if your slots file is named like:
 
 Also, these files are complementary: this application will search for the most specific slots file (eg: myslotsfile-2013-02-24.txt) but if not found it will try to find a more general one (eg: myslotsfile-2013-02.txt).
 
-For example, you can have multiple slots files sitting together, like this:
+For example, you can have multiple slots files sitting together in the slots folder, like this:
 
-myslotsfile-2013-02-24.txt
-myslotsfile-2013-02.txt
-myslotsfile.txt
+    slots/
+        myslotsfile-2013-02-24.txt
+        myslotsfile-2013-02.txt
+        myslotsfile.txt
 
 This configuration will work like this:
 
