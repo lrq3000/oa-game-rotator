@@ -6,7 +6,8 @@ TODO
 
 - meme avec commande normale gtv: affiche serv mais heartbeater apres demande toujours le pass quand on s'attache au screen. Rights pas bons? A cause de l'echo non autorisé? No asking the password in visudo?
 - tester passer de defaultconfig a slotsfile (temps d'attente?)
-- BUG: baseoa a as only one launch, with twice bug! Remove one repeat if previous global var mod was different or try to fix the problem by another mean?
+- BUG: baseoa a aftershock only one launch, with twice bug! Remove one repeat if previous global var mod was different or try to fix the problem by another mean?
+NEWS: this is somewhat fixed, I don't know why
 - if default gamemod not provided, stay as is (not restart gtv) when string becomes '' and default config is called
 - essayer de remplacer score par follow next, et follow next par score (better? do not switch too often?)
 - b3 voir reco auto si ca marche (et enlever pas mal de plugins comme par exemple pas de cronjob ni quote)

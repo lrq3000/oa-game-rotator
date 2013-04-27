@@ -330,7 +330,7 @@ def gtv_reconnect(servport, servaddr = "localhost", password = ''):
 # Construct one or several string containing the commands to be executed (for booking)
 last_binfullpath = ''
 last_gtvfullpath = ''
-def make_oamps_command(defaultconfig, defaultmod, oampsarguments, slot = None, startup = False):
+def make_oamps_command(defaultconfig, defaultmod, oampsarguments, slot = None, startup = False, oampsfullpath = None):
 
     #-- Special variables
     refarray = ["g_refPassword", "refereePassword", "ref_password"] # store the variables that contains the referee passwords. Add here more variables to support more mods. Currently supports: AfterShock, ExcessivePlus, CPMA
@@ -344,13 +344,14 @@ def make_oamps_command(defaultconfig, defaultmod, oampsarguments, slot = None, s
     # Get environment var for the bash binary
     bashbin = os.getenv('SHELL', 'bash')
 
+    # Get this script's directory
+    currentdir = os.path.dirname(os.path.abspath(__file__))
+
     # OAMPS base command stores the basic command to execute the oamps.sh script (with bash binary and oamps full path if specified)
-    if type(oampsargs['oampsfullpath']) == list: # since we get the params and values from argparse, it has the bad habit of always creating a list for values even if it's a single value, so here if that's the case, we fetch the single value inside the list
-        oampsargs['oampsfullpath'] = oampsargs['oampsfullpath'][0]
-    if oampsargs['oampsfullpath'] != '':
-        basecommand = bashbin+' '+oampsargs['oampsfullpath']
-    else:
-        basecommand = bashbin+' oamps.sh'
+    if oampsfullpath:
+        basecommand = bashbin+' '+oampsfullpath
+    else: # default to the current directory
+        basecommand = bashbin+' '+os.path.join(currentdir,'oamps.sh')
 
     # Parameters arrays and dictionaries
     oampsparams = dict()
@@ -375,7 +376,6 @@ def make_oamps_command(defaultconfig, defaultmod, oampsarguments, slot = None, s
 
     #-- Make oamps arguments from commandline
     # we take commandline arguments from oa-game-rotator that are the same for oamps, and feed them to oamps
-    del oampsargs['oampsfullpath']
     if oampsargs is not None:
         for parameter, value in oampsargs.iteritems():
             if value != False and value is not None:
@@ -638,9 +638,9 @@ def main(argv=None):
                         help='Redirect all outputs to a log file.')
     slots_parser.add_argument('--margin-delay', metavar='seconds', type=int, nargs=1, required=False,
                         help='Seconds to wait after the planned end time of a booking to switch to the next (this allows players to take the time to end the match). Note: not applied when there\'s no booking, the next booking will begin right on time. Default: 2 minutes.')
+    slots_parser.add_argument('-op', '--oampsfullpath', metavar='/some/path/oamps.sh', type=str, nargs=1, required=False,
+                        help='Fullpath to oamps.sh script, including the script filename (default: same folder as the oa-game-rotator.py)')
     # OAMPS arguments
-    oamps_parser.add_argument('-op', '--oampsfullpath', metavar='/some/path/oamps.sh', type=str, nargs=1, required=False, default='',
-                        help='Fullpath to oamps.sh script (if not in the same folder as the oa-game-rotator.py) - including the script')
     # no addcron support! be careful, it will cause weird stuffs to happen (every slot will be registered in cron!)
     oamps_parser.add_argument('-b', '--basepath', metavar='/some/path', type=str, nargs=1, required=False,
                         help='see oamps help')
@@ -767,6 +767,10 @@ def main(argv=None):
     else:
         defaultmod = None # by default, we keep the same gamemod that was loaded for the last booking, until specified otherwise by a later booking
 
+    oampsfullpath = None
+    if args.oampsfullpath: # since we get the params and values from argparse, it has the bad habit of always creating a list for values even if it's a single value, so here if that's the case, we fetch the single value inside the list
+        oampsfullpath = args.oampsfullpath[0]
+
     #===== MAIN LOOP ====
     # loop indefinitely
     while 1:
@@ -786,7 +790,7 @@ def main(argv=None):
         #-- Loading default config if there's no slots file
         if r is None:
             print('No slots file could be found for today, the month, the year or even just the server. Loading the default config.')
-            commands = make_oamps_command(defaultconf, defaultmod, oampsargs, None, startup)
+            commands = make_oamps_command(defaultconf, defaultmod, oampsargs, None, startup, oampsfullpath)
             startup = False # set to false so that we don't restart automatically the next servers (unless required by the slotsfile)
             #-- Execute the commands
             for command in commands:
@@ -817,7 +821,7 @@ def main(argv=None):
                 [currslot, nextslot, nexttime, nexttimestr, sleeptime] = get_slots_time_infos(nbslots, timedelimiter, margindelay)
 
                 #-- Get the commands for the current slot
-                commands = make_oamps_command(defaultconf, defaultmod, oampsargs, slots[currslot], startup)
+                commands = make_oamps_command(defaultconf, defaultmod, oampsargs, slots[currslot], startup, oampsfullpath)
                 startup = False # set to false so that we don't restart automatically the next servers (unless required by the slotsfile)
 
                 #-- Execute the commands
